@@ -1,0 +1,102 @@
+Select * from person;
+Select personlastname, personfirstname, personemail
+From person;
+Select personlastname, personfirstname, personemail
+From person
+ORDER by personlastname, personfirstname;
+SELECT personfirstname, personlastname, personemail
+FROM person
+ORDER BY personlastname DESC;
+SELECT personfirstname, personlastname, personemail
+FROM person
+ORDER BY personlastname ASC, personfirstname DESC;
+SELECT personlastname, personfirstname, personemail
+FROM person
+ORDER BY 1,2;
+SELECT personfirstname AS "First Name", personlastname AS "Last Name", 
+personemail AS “Email”
+FROM person
+ORDER BY personlastname, personfirstname;
+SELECT * 
+FROM personAddress
+WHERE personaddresscity='Bellevue';
+SELECT * 
+FROM donation
+WHERE donationamount > 1000;
+SELECT personfirstname, personlastname 
+FROM person
+WHERE personlastname > 'Martin';
+SELECT grantapplicationkey, grantapplicationdate,
+personkey, granttypekey, grantapplicationamount
+FROM grantapplication
+WHERE granttypekey=3
+AND grantapplicationamount > 400;
+SELECT grantapplicationkey, grantapplicationdate,
+personkey, granttypekey, grantapplicationamount 
+FROM grantapplication
+WHERE granttypekey=3
+AND grantapplicationamount > 400
+AND grantapplicationdate >= '1/1/2020';
+SELECT grantapplicationkey, grantapplicationdate,
+personkey, granttypekey, grantapplicationamount 
+FROM grantapplication
+WHERE granttypekey=3
+OR grantapplicationamount > 400;
+SELECT *
+FROM personaddress
+WHERE NOT personaddresscity='Seattle';
+SELECT grantapplicationkey, grantapplicationdate,
+personkey, granttypekey, grantapplicationamount 
+FROM grantapplication
+WHERE granttypekey=3
+AND NOT grantapplicationamount > 400
+OR grantapplicationdate >= '1/1/2020';
+SELECT grantapplicationkey, grantapplicationdate,
+personkey, granttypekey, grantapplicationamount 
+FROM grantapplication
+WHERE granttypekey=3
+AND (NOT grantapplicationamount > 400
+OR grantapplicationdate >= '1/1/2020');
+SELECT * 
+FROM donation
+WHERE donationamount >=500 
+AND donationamount <=1000;
+SELECT *
+FROM donation
+WHERE donationdate BETWEEN '3/1/2021' AND '3/31/2021';
+SELECT *
+FROM personaddress
+WHERE personaddressapt IS NULL;
+SELECT *
+FROM personaddress
+WHERE personaddressapt IS NOT NULL;
+SELECT *
+FROM person
+WHERE personemail LIKE '%msn.com';
+SELECT personlastname, personfirstname
+FROM person
+WHERE personlastname LIKE 'R%';
+SELECT personlastname, personfirstname
+FROM person
+WHERE personfirstname LIKE 'J%y';
+SELECT personlastname, personfirstname
+FROM person
+WHERE personfirstname LIKE '_ill';
+SELECT donationkey, personkey,
+ CASE 
+ WHEN donationamount >= 1000 THEN 'Signature'
+ WHEN donationamount BETWEEN 500 and 999 THEN 'Patron'
+ WHEN donationamount < 500 THEN 'Friend'
+ ELSE 'No Level'
+END AS "Level",
+donationamount
+FROM donation;
+SELECT employeekey 
+FROM grantreview;
+SELECT DISTINCT employeekey 
+FROM grantreview;
+SELECT DISTINCT grantapplicationkey, grantreviewdate, employeekey 
+FROM grantreview;
+SELECT DISTINCT ON(employeekey) employeekey, 
+grantapplicationkey, grantreviewdate
+FROM grantreview;
