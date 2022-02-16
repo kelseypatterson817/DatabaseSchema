@@ -1,0 +1,90 @@
+SELECT 12 * 3 /4 + 10;
+SELECT donationamount,
+donationamount * .75 AS "For Grants",
+donationamount *.25 AS "For Maintenance"
+FROM donation;
+SELECT donationamount, donationamount /9 AS charity
+FROM Donation;
+SELECT donationamount,ROUND(donationamount /9, 2) AS charity
+FROM Donation;
+SELECT donationamount,CEILING(donationamount /9) AS charity
+FROM Donation;
+SELECT donationamount,FLOOR(donationamount /9) AS charity
+FROM Donation;
+Select donationamount, 
+donationamount/9 AS charity,
+ROUND(donationamount/9) AS rounded,
+CEILING(donationamount/9) AS "ceiling",
+FLOOR(donationamount/9)AS FLOOR
+FROM donation;
+SELECT donationamount,TO_CHAR(donationamount /9,'$9,999.99') AS charity
+FROM Donation;
+SELECT CURRENT_DATE;
+SELECT CURRENT_TIME;
+SELECT CURRENT_TIMESTAMP;
+Select AGE(TIMESTAMP '2/5/1994');
+SELECT employeekey, employeepositionstartdate, 
+AGE(employeepositionstartdate)
+FROM employeeposition
+ORDER BY employeepositionstartdate;
+SELECT grantapplicationkey, 
+grantapplicationdate, 
+grantapplicationdate + INTERVAL '2 days' as "Review By"
+FROM grantapplication;
+SELECT grantapplicationkey,
+grantapplicationdate, 
+grantapplicationdate + INTERVAL '48 hours' as "Review By"
+FROM grantapplication;
+SELECT donationdate, EXTRACT(year FROM donationdate) AS "Year"
+FROM donation;
+SELECT personfirstname ||' ' || personlastname AS "Name"
+FROM person;
+SELECT personemail, POSITION('@' in personemail)
+FROM person;
+SELECT personemail, SUBSTRING(personemail FROM 1 FOR POSITION('@' IN 
+personemail)-1) 
+AS "UserName"
+FROM person;
+SELECT personfirstname || '.' || personlastname || ' @cassist.org ' 
+FROM person
+Join employee using (personkey);
+SELECT personfirstname || '.' || personlastname || TRIM(' @cassist.org ') 
+FROM person
+Join employee using (personkey);
+SELECT UPPER(personfirstname) AS FirstName 
+FROM person;
+SELECT LOWER(personlastname) AS "Lower"
+FROM person;
+SELECT personemail, INITCAP(personemail) AS Capped 
+FROM person;
+SELECT SUM(donationamount) AS Total
+FROM donation;
+SELECT AVG(donationamount) AS Average
+FROM donation;
+SELECT EXTRACT(YEAR FROM donationdate) AS "Year",
+SUM(donationamount) AS Total,
+AVG(donationamount) AS Average
+FROM donation
+GROUP BY EXTRACT(YEAR FROM donationdate);
+SELECT EXTRACT(YEAR FROM grantapplicationdate) AS "Year",
+granttypekey,
+SUM(grantapplicationamount) AS Total,
+AVG(grantapplicationamount) AS Average
+FROM grantapplication
+GROUP BY EXTRACT(YEAR FROM grantapplicationdate), granttypekey
+ORDER BY EXTRACT(YEAR FROM grantapplicationdate), granttypekey;
+SELECT EXTRACT(YEAR FROM grantapplicationdate) AS "Year",
+granttypekey,
+SUM(grantapplicationamount) AS Total,
+AVG(grantapplicationamount) AS Average
+FROM grantapplication
+WHERE EXTRACT(YEAR FROM grantapplicationdate)=2018
+GROUP BY EXTRACT(YEAR FROM grantapplicationdate), granttypekey;
+SELECT EXTRACT(YEAR FROM grantapplicationdate) AS "Year",
+granttypekey,
+SUM(grantapplicationamount) AS Total,
+AVG(grantapplicationamount) AS Average
+FROM grantapplication
+WHERE EXTRACT(YEAR FROM grantapplicationdate)=2021
+GROUP BY EXTRACT(YEAR FROM grantapplicationdate), granttypekey
+HAVING AVG(grantapplicationamount) >= 500;
