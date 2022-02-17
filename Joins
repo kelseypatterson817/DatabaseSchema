@@ -1,0 +1,89 @@
+SELECT employeekey, positionname
+FROM employee
+CROSS JOIN jobPosition
+ORDER BY employeekey;
+SELECT employeekey, personfirstname, personlastname 
+FROM person
+INNER JOIN employee
+ON person.personkey=employee.personkey
+ORDER BY employeekey;
+SELECT employee.employeekey, personfirstname, personlastname, positionkey, 
+employeepositionstartdate
+FROM person
+INNER JOIN employee
+ON person.personkey=employee.personkey
+INNER JOIN employeeposition
+ON employee.employeekey=employeeposition.employeekey
+ORDER BY employee.employeekey;
+SELECT employee.employeekey, personfirstname, personlastname, positionname, 
+employeepositionstartdate
+FROM person 
+INNER JOIN employee 
+ON person.personkey=employee.personkey
+INNER JOIN employeeposition 
+ON employee.employeekey=employeeposition.employeekey
+INNER JOIN jobposition
+ON employeeposition.positionkey=jobposition.positionkey
+ORDER BY employee.employeekey;
+SELECT date_part('Year', grantapplicationdate)"Year", 
+SUM(GrantApplicationamount) requested,
+SUM(grantstatusfinalallocation) allocated,
+SUM(GrantApplicationamount)-SUM(grantstatusfinalallocation) Difference
+FROM grantapplication
+INNER JOIN grantstatus
+ON grantapplication.grantapplicationkey=grantstatus.grantapplicationkey
+GROUP BY date_part('Year', grantapplicationdate)
+ORDER BY date_part('Year', grantapplicationdate);
+SELECT personaddresscity, sum(donationamount) donations
+FROM personaddress
+INNER JOIN Donation
+ON Personaddress.personkey=donation.personkey
+GROUP BY Personaddresscity;
+SELECT personaddresscity, sum(donationamount) donations
+FROM personaddress
+INNER JOIN Donation
+ON Personaddress.personkey=donation.personkey
+WHERE personaddress.personkey=7
+GROUP BY Personaddresscity;
+SELECT Distinct granttypename, grantapplication.granttypekey
+FROM GrantType
+LEFT OUTER JOIN grantapplication
+ON GrantType.granttypekey=grantapplication.granttypekey;
+SELECT Distinct granttypename, grantapplication.granttypekey
+FROM GrantType
+LEFT OUTER JOIN grantapplication
+ON GrantType.granttypekey=grantapplication.granttypekey
+WHERE grantapplication.granttypekey IS NULL;
+SELECT Distinct granttypename, grantapplication.granttypekey
+FROM grantapplication
+RIGHT OUTER JOIN grantType
+ON GrantType.granttypekey=grantapplication.granttypekey
+WHERE grantapplication.granttypekey IS NULL;
+SELECT personlastname, personfirstname, positionname, grantreview.employeekey
+FROM person
+INNER JOIN employee
+ON person.personkey=employee.personkey
+INNER JOIN employeeposition
+ON employee.employeekey=employeeposition.employeekey
+INNER JOIN jobposition 
+ON jobposition.positionkey=employeeposition.positionkey
+LEFT OUTER JOIN grantreview
+ON grantreview.employeekey=employee.employeekey
+WHERE grantreview.employeekey IS NULL;
+SELECT Distinct granttypename, grantapplication.granttypekey
+FROM GrantType
+FULL JOIN grantapplication
+ON GrantType.granttypekey=grantapplication.granttypekey;
+SELECT personfirstname, personlastname, personemail,
+employeekey, personaddresscity
+FROM person
+NATURAL JOIN personaddress
+NATURAL JOIN employee;
+SELECT personlastname, personfirstname, DonationDate, DonationAmount, 
+grantapplicationDate, grantapplicationamount
+FROM person
+JOIN donation on person.personkey=donation.personkey
+JOIN grantapplication 
+ON grantapplicationdate 
+BETWEEN donationdate AND donationdate + interval '7 day'
+ORDER BY personLastName, personfirstname;
