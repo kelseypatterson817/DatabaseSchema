@@ -1,0 +1,78 @@
+INSERT INTO person(personLastName, personfirstname, personemail, 
+personprimaryphone, persondateadded)
+VALUES('Mullins', 'Lynn', 
+'lynnmullins@gmail.com','2065551309',current_timestamp);
+
+SELECT * FROM person where personemail=’lynnmullins@gmail.com’;
+
+INSERT INTO personaddress(personkey, personaddressapt, personaddressstreet, 
+personaddresszipcode)
+VALUES(133,null,'1234 South Jackson Blvd', '98122');
+
+INSERT INTO person(personLastName, personfirstname, personemail, 
+personprimaryphone, persondateadded)
+VALUES('Brady', 'Nelson', 
+'NelsonBrady@gmail.com','2065557591',current_timestamp); 
+INSERT INTO personaddress(personkey, personaddressapt, personaddressstreet, 
+personaddresszipcode)
+VALUES((SELECT MAX(personkey) FROM PERSON),null,'1455 North Jackson Blvd', 
+'98001');
+
+INSERT INTO person(personLastName, personfirstname, personemail, 
+personprimaryphone, persondateadded)
+VALUES('Lorrine', 'Amy', 'lorrine@gmail.com','2065550912',current_timestamp); 
+INSERT INTO personaddress(personkey, personaddressapt, personaddressstreet, 
+personaddresszipcode)
+VALUES(CURRVAL('person_personkey_seq'),null,'1455 North Jackson Blvd', 
+'98001');
+
+INSERT INTO donation(personkey, donationamount)
+VALUES(133, 500.00),
+(134, 250.00),
+(135,125.50);
+
+Insert into Logintable(personkey, personusername, personpassword)
+Values (133, ‘lmullins’, createpassword(‘MullinsPass’));
+
+INSERT INTO LoginTable(personkey, personusername, personpassword)
+SELECT personkey, LOWER(SUBSTRING(personfirstname, 1,1)|| personlastname), 
+createpassword(personlastname || 'Pass')
+FROM person
+WHERE personkey > 132;
+
+UPDATE <tablename>
+SET <columnname> = <newvalue>,
+<columnname>=<newvalue>
+. . .
+WHERE <columnname>=<somevalue>>
+
+UPDATE PERSON
+SET personLastName=’Cooper’,
+personemail=’LindaCooper@gmail.com’
+WHERE personkey=2;
+
+SELECT * INTO person2 FROM person;
+
+UPDATE person2
+SET personLastname='Smith';
+
+UPDATE granttype
+SET granttypeonetimemax=granttypeonetimemax * 1.05,
+granttypelifetimemax=granttypelifetimemax * 1.05;
+
+UPDATE person
+SET personlastname=’Smith’;
+SELECT * FROM person;
+ROLLBACK TRANSACTION;
+
+DELETE FROM <table> WHERE <ColumnName>=<value>;
+
+DELETE FROM donation WHERE donationkey=70;
+
+TRUNCATE person2;
+
+DELETE FROM person WHERE personkey=3
+ERROR: update or delete on table "person" violates foreign key constraint 
+"employee_personkey_fkey" on table "employee" DETAIL: Key (personkey)=(3) is 
+still referenced from table "employee". SQL state: 23503
+
