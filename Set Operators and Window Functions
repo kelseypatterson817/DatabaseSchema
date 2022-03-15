@@ -1,0 +1,104 @@
+CREATE TEMP TABLE email
+(
+ firstname text,
+ lastname text,
+ email text
+);
+INSERT INTO email(firstname, lastname, email)
+VALUES('Jordan', 'Lawrence', 'jordanl@gmail.com'),
+('Tammy', 'Standish', 'tstandish@msn.com'),
+('Lester', 'Roberts', 'lr@yahoo.com'),
+('Lynn', 'Kellerman', 'kellerman@gmail.com');
+SELECT lastname, firstname, email, 'temptable' as tblSource from email
+UNION
+SELECT PersonLastname, personfirstname, personemail, 'Persontable'
+FROM person
+JOIN personaddress
+USING (personkey)
+WHERE personaddressCity='Bellevue';
+SELECT Personlastname lastname, 
+personfirstname firstname,
+personemail email,
+'donor' "role"
+FROM person
+JOIN donation USING(personkey)
+WHERE donationamount >=2000
+UNION
+SELECT Personlastname lastname, 
+personfirstname firstname,
+personemail email,
+'client'
+FROM person
+JOIN grantapplication USING(personkey)
+WHERE granttypekey=2;
+SELECT personkey, personlastname, personfirstname
+FROM person
+JOIN donation USING(personkey)
+INTERSECT
+SELECT personkey, personlastname, personfirstname
+FROM person
+JOIN grantapplication USING(personkey);
+SELECT personaddresscity
+FROM personaddress
+JOIN person USING (personkey)
+JOIN donation USING (personkey)
+INTERSECT
+SELECT personaddresscity
+FROM personaddress
+JOIN person USING (personkey)
+JOIN grantapplication USING (personkey);
+SELECT personaddresscity
+FROM personaddress
+JOIN person USING (personkey)
+JOIN donation USING (personkey)
+EXCEPT
+SELECT personaddresscity
+FROM personaddress
+JOIN person USING (personkey)
+JOIN grantapplication USING (personkey);
+SELECT granttypename 
+FROM granttype
+EXCEPT
+SELECT granttypename 
+FROM grantapplication
+JOIN granttype USING (granttypekey);
+SELECT grantapplicationkey, 
+granttypekey, COUNT(*) OVER (PARTITION BY granttypekey)
+FROM grantapplication;
+SELECT granttypename, grantapplicationkey, grantapplicationamount,
+RANK() OVER (PARTITION BY granttypeName ORDER BY Grantapplicationamount DESC)
+FROM grantapplication
+JOIN granttype ON granttype.granttypekey=grantapplication.granttypekey
+WHERE granttypename='Food';
+SELECT granttypename, grantapplicationkey, grantapplicationamount,
+DENSE_RANK() OVER (PARTITION BY granttypeName ORDER BY Grantapplicationamount 
+DESC)
+FROM grantapplication
+JOIN granttype ON granttype.granttypekey=grantapplication.granttypekey
+WHERE granttypename='Food';
+SELECT grantapplicationkey, granttypename, grantapplicationamount,
+ROW_NUMBER() OVER(ORDER BY grantapplicationkey)
+FROM grantapplication
+JOIN granttype using(granttypekey);
+SELECT grantapplicationkey, granttypename, grantapplicationamount,
+ROW_NUMBER() OVER(ORDER BY grantapplicationamount)
+FROM grantapplication
+JOIN granttype using(granttypekey);
+SELECT * 
+FROM
+(SELECT grantapplicationkey, granttypename, grantapplicationamount,
+ROW_NUMBER() OVER(ORDER BY grantapplicationamount) 
+FROM grantapplication
+JOIN granttype using(granttypekey))grants
+WHERE ROW_NUMBER BETWEEN 20 and 30;
+SELECT granttypename, grantapplicationamount,
+FIRST_VALUE(grantapplicationamount) OVER 
+(PARTITION BY granttypekey ORDER BY Grantapplicationamount)
+FROM grantapplication
+JOIN granttype using(granttypekey);
+SELECT granttypename, grantapplicationamount,
+LAST_VALUE(grantapplicationamount) OVER 
+(PARTITION BY granttypekey ORDER BY Grantapplicationamount 
+RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
+FROM grantapplication
+JOIN granttype using(granttypekey);
